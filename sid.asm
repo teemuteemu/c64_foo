@@ -13,17 +13,20 @@ voice1EnvSR = $d406
 
 masterCtrl = $D418
 
-;freq = #10 ; #$01b8
-;adenv = #$06
-;srenv = #$00
-
 freq .word $0430
+freqH = $f0
+freqL = $f1
 adenv .byte $02
 srenv .byte $00
 tickcounter =$fa
-speed = #6 ; wait for 50 * 1/50 sec
+speed = #50 ; wait for 50 * 1/50 sec
 
 start:
+  lda <freq
+  sta freqL
+  lda >freq
+  sta freqH
+
 ; clear all sid registers to 0
   ldx #$00
   lda #$00
@@ -71,9 +74,9 @@ playnote:
   sta voice1Ctrl
 
   ; freq voice 1
-  lda <freq
+  lda freqL
   sta voice1FreqL
-  lda >freq
+  lda freqH
   sta voice1FreqH
 
   ; adsr voice 1
@@ -83,7 +86,9 @@ playnote:
   sta voice1EnvSR
 
   ; voice 1 ctrl
-  lda #%00100001
+  lda #%00010001
   sta voice1Ctrl
+
+  dec freqL
 
   rts
