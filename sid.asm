@@ -3,14 +3,7 @@
         .null $9e, format("%d", start) ;will be sys 2061
 +	.word 0          ;basic line end
 
-*       = $02
-array   .fill 8
-
 *       = $1000
-
-bgAddrOuter = $d020
-bgAddrInner = $d021
-color = #2
 
 voice1FreqH = $d400
 voice1FreqL = $d401
@@ -28,7 +21,7 @@ freq .word $0430
 adenv .byte $02
 srenv .byte $00
 tickcounter =$fa
-speed = #50 ; wait for 50 * 1/50 sec
+speed = #6 ; wait for 50 * 1/50 sec
 
 start:
 ; clear all sid registers to 0
@@ -56,20 +49,19 @@ loop:
   inc tickcounter
   lda tickcounter
   cmp speed
-  bne out
+  bne mainloopend
 
   lda #0
   sta tickcounter
 
   jsr playnote
 
-out:
+mainloopend:
   lda #$fb
 syncloop:
   cmp $d012 
   beq syncloop
   jmp mainloop
-  
 
 playnote:
   inc $d020
@@ -90,7 +82,8 @@ playnote:
   lda srenv
   sta voice1EnvSR
 
-  lda #%10000001
+  ; voice 1 ctrl
+  lda #%00100001
   sta voice1Ctrl
 
   rts
