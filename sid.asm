@@ -19,7 +19,7 @@ freqL = $f1
 adenv .byte $02
 srenv .byte $00
 tickcounter =$fa
-speed = #50 ; wait for 50 * 1/50 sec
+speed = #5 ; wait for 50 * 1/50 sec
 
 start:
   lda <freq
@@ -86,9 +86,7 @@ playnote:
   sta voice1EnvSR
 
   ; voice 1 ctrl
-  lda #%00010001
+  lda #%10000001
   sta voice1Ctrl
-
-  dec freqL
 
   rts
